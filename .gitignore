@@ -1,0 +1,10 @@
+.classpath
+.project
+*.prefs
+*.yml
+*.txt
+*.MF
+target
+.idea
+pom.xml
+todo
