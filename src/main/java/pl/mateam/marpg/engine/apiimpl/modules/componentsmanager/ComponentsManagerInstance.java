@@ -55,10 +55,11 @@ public class ComponentsManagerInstance implements CommodoreComponentsManager {
 
 	@Override
 	public boolean disableComponent(CommodoreComponent component) {
-		if(!Bukkit.getServer().getPluginManager().isPluginEnabled(component.getPlugin()))
+		CommodoreComponentInfo componentInfo = knownComponents.get(component.getPlugin().getName());
+		if(!componentInfo.isComponentEnabled())
 			return false;
 		component.onBeingTurnedOff();
-		knownComponents.get(component.getPlugin().getName()).markEnabled(false);
+		componentInfo.markEnabled(false);
 		return true;
 	}
 
@@ -71,6 +72,7 @@ public class ComponentsManagerInstance implements CommodoreComponentsManager {
 	public boolean reloadComponent(CommodoreComponent component, String parameter) {
 		if(!Bukkit.getServer().getPluginManager().isPluginEnabled(component.getPlugin()))
 			return false;
-		return component.onBeingReloaded(parameter);
+		component.onBeingReloaded(parameter);
+		return true;
 	}
 }

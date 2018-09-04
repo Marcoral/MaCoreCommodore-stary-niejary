@@ -1,0 +1,7 @@
+name: MaCoreCommodore
+version: 0.0.1
+main: pl.mateam.marpg.engine.Initializer
+
+author: Marcoral
+description: "Jedynie MaCoreCommodore, najpotężniejszy znany plugin-matka, pozwala powołać serwer MaRPG do działania."
+website: www.marpg.pl

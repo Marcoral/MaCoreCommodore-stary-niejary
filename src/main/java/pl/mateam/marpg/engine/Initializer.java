@@ -3,9 +3,9 @@ package pl.mateam.marpg.engine;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.mateam.marpg.api.Commodore;
-import pl.mateam.marpg.api.Commodore_Intermediate;
 import pl.mateam.marpg.api.modules.utils.CommodoreDevelopmentUtils;
 import pl.mateam.marpg.engine.apiimpl.CommodoreImplementation;
+import pl.mateam.marpg.engine.core.Core;
 
 public class Initializer extends JavaPlugin {
 	private static Initializer singleton;
@@ -15,17 +15,26 @@ public class Initializer extends JavaPlugin {
 	
 	public void onEnable() {
 		singleton = this;
-		initializeAPI();
-		initializeCore();
+		
+		CommodoreImplementation commodoreBase = new CommodoreImplementation();
+		initializeAPI(commodoreBase);
+		initializeCore(commodoreBase);
 	}
 	
-	private void initializeAPI() {
-		Commodore_Intermediate commodore = new CommodoreImplementation();
-		CommodoreDevelopmentUtils devUtils = commodore.getUtils().getDevelopmentUtils();
-		devUtils.injectExternalField(Commodore.class, null, "instance", commodore);
+	public void onDisable() {
+		Commodore.getComponentsManager().disableComponent(this.getName());	//Send shutdown signal to Core
 	}
 	
-	private void initializeCore() {
-		Commodore.getComponentsManager().enableComponent(new Core());
+	private void initializeAPI(CommodoreImplementation commodoreBase) {
+		CommodoreDevelopmentUtils devUtils = commodoreBase.getUtils().getDevelopmentUtils();
+		devUtils.injectExternalField(Commodore.class, null, "instance", commodoreBase);
+		//Now use of core-independent methods like Commodore.getComponentsManager() is save.
+	}
+	
+	private void initializeCore(CommodoreImplementation commodoreBase) {
+		Core core = new Core();
+		Commodore.getComponentsManager().enableComponent(core);
+		Commodore.getUtils().getDevelopmentUtils().injectExternalField(CommodoreImplementation.class, commodoreBase, "core", core);
+		//Now use of core-dependent methods like Commodore.getDatabase() is save.
 	}
 }

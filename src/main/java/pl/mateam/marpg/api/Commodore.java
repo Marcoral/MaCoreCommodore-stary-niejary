@@ -1,6 +1,7 @@
 package pl.mateam.marpg.api;
 
 import pl.mateam.marpg.api.modules.componentsmanager.CommodoreComponentsManager;
+import pl.mateam.marpg.api.modules.database.CommodoreDatabase;
 import pl.mateam.marpg.api.modules.files.CommodoreFilesManager;
 import pl.mateam.marpg.api.modules.utils.CommodoreDevelopmentUtils.Extern;
 import pl.mateam.marpg.api.modules.utils.CommodoreUtils;
@@ -11,6 +12,10 @@ public class Commodore {
 	
 	public static CommodoreComponentsManager getComponentsManager() {
 		return COMMODORE_SINGLETON.getComponentsManager();
+	}
+	
+	public static CommodoreDatabase getDatabase() {
+		return COMMODORE_SINGLETON.getDatabase();
 	}
 
 	public static CommodoreFilesManager getFilesManager() {

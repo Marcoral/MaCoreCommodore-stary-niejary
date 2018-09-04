@@ -7,6 +7,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 public interface CommodoreComponent {
 	JavaPlugin getPlugin();
 	void onBeingTurnedOn();
-	boolean onBeingReloaded(String parameter);
+	void onBeingReloaded(String parameter);
 	void onBeingTurnedOff();
 }

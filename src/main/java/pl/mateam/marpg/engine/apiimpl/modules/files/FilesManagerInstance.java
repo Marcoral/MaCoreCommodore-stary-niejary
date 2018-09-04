@@ -12,6 +12,7 @@ import java.util.jar.JarFile;
 import pl.mateam.marpg.api.Commodore;
 import pl.mateam.marpg.api.CommodoreComponent;
 import pl.mateam.marpg.api.modules.componentsmanager.CommodoreComponentsManager.ComponentNotLoadedYetException;
+import pl.mateam.marpg.api.modules.files.CommodoreConfigurationFile;
 import pl.mateam.marpg.api.modules.files.CommodoreFilesManager;
 import pl.mateam.marpg.engine.ControlPanel;
 import pl.mateam.marpg.engine.apiimpl.modules.componentsmanager.ComponentsManagerInstance;
@@ -70,5 +71,17 @@ public class FilesManagerInstance implements CommodoreFilesManager {
 		} catch (IOException e) {
 			ControlPanel.exceptionThrown(e);
 		}
+	}
+
+	@Override
+	public CommodoreConfigurationFile getConfig(String componentName, String relativePath) throws ComponentNotLoadedYetException {
+		ComponentsManagerInstance componentsManager = (ComponentsManagerInstance) Commodore.getComponentsManager();
+		return getConfig(componentsManager.getComponentInstanceOrThrow(componentName), relativePath);
+	}
+
+	@Override
+	public CommodoreConfigurationFile getConfig(CommodoreComponent component, String relativePath) {
+		String path = component.getPlugin().getDataFolder() + "/" + relativePath;
+		return ConfigurationFileInstance.createFor(path);
 	}
 }

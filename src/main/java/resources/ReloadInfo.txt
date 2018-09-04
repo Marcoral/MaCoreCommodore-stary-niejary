@@ -1,0 +1,6 @@
+DO soft reload if you want to:
+
+
+
+DON'T DO reload if you want to:
+  - Connect to database with new credentials
