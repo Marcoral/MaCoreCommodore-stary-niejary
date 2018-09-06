@@ -5,7 +5,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import pl.mateam.marpg.api.CommodoreRuntimeException;
+import pl.mateam.marpg.api.superclasses.CommodoreRuntimeException;
 
 public interface CommodoreDevelopmentUtils {
 	@Target({ ElementType.FIELD })
@@ -14,7 +14,7 @@ public interface CommodoreDevelopmentUtils {
 		String key();
 	}
 
-	<T> void injectExternalField(Class<T> clazz, T instance, String keyOfExternal, Object value) throws InjectExternalFieldException;
+	<T> void injectExternalField(Class<? super T> clazz, T instance, String keyOfExternal, Object value, boolean fieldSurelyExists) throws InjectExternalFieldException;
 	public class InjectExternalFieldException extends CommodoreRuntimeException {
 		private static final long serialVersionUID = -3825475363175213808L;
 		

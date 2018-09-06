@@ -8,6 +8,8 @@ import org.bukkit.Bukkit;
 import pl.mateam.marpg.api.Commodore;
 import pl.mateam.marpg.api.CommodoreComponent;
 import pl.mateam.marpg.api.modules.componentsmanager.CommodoreComponentsManager;
+import pl.mateam.marpg.api.superclasses.CommodoreModule;
+import pl.mateam.marpg.engine.apiimpl.SubmoduleHelperInstance;
 
 public class ComponentsManagerInstance implements CommodoreComponentsManager {
 	private Map<String, CommodoreComponentInfo> knownComponents = new HashMap<>();
@@ -48,6 +50,8 @@ public class ComponentsManagerInstance implements CommodoreComponentsManager {
 			Commodore.getFilesManager().regenerateConfiguration(component);
 		} else if(componentInfo.isComponentEnabled())
 			return false;
+		if(component instanceof CommodoreModule)
+			Commodore.getUtils().getDevelopmentUtils().injectExternalField(CommodoreModule.class, (CommodoreModule) component, "submodule helper", new SubmoduleHelperInstance(), true);
 		component.onBeingTurnedOn();
 		componentInfo.markEnabled(true);
 		return true;

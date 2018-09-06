@@ -1,6 +1,6 @@
 package pl.mateam.marpg.engine.core;
 
-import pl.mateam.marpg.api.CommodoreRuntimeException;
+import pl.mateam.marpg.api.superclasses.CommodoreRuntimeException;
 
 public class CommodoreCoreSetupException extends CommodoreRuntimeException {
 	private static final long serialVersionUID = -7529158865004894771L;

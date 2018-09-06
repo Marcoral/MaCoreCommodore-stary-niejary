@@ -1,0 +1,25 @@
+﻿Connection:
+  IP: localhost
+  Port: 3306
+  Database: MaRPG
+  Username: Marcoral
+  Password: obfuscated
+
+Worlds:
+  Defaults:
+    Gamerules:
+      doFireTick: false
+      doMobLoot: false
+      mobGriefing: false
+      doMobSpawning: false
+      doWeatherCycle: false
+      showDeathMessages: false
+      naturalRegeneration: false
+      keepInventory: true
+      reducedDebugInfo: true
+      doLimitedCrafting: true
+      randomTickSpeed: 0 
+  Specified:
+    Karhan:
+      # Minecraft world directory name
+      Name: "Karhan"

@@ -8,10 +8,13 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import pl.mateam.marpg.api.modules.database.CommodoreDatabase;
 import pl.mateam.marpg.api.modules.files.CommodoreConfigurationFile;
+import pl.mateam.marpg.api.superclasses.CommodoreSubmodule;
 import pl.mateam.marpg.engine.ControlPanel;
 import pl.mateam.marpg.engine.core.CommodoreCoreSetupException;
+import pl.mateam.marpg.engine.core.ConfigPath;
+import pl.mateam.marpg.engine.core.CoreLoadingUtils;
 
-public class DatabaseImplementation implements CommodoreDatabase {
+public class DatabaseImplementation implements CommodoreDatabase, CommodoreSubmodule {
 	private String user;
 	private String database;
 	private String password;
@@ -19,7 +22,13 @@ public class DatabaseImplementation implements CommodoreDatabase {
 	private String hostname;
 	private Connection connection;
 
-	public void setup(CommodoreConfigurationFile config) throws RuntimeException {
+	/* ------------------- */
+	/* Core submodule part */
+	/* ------------------- */
+	
+	@Override
+	public void setup() throws RuntimeException {
+		CommodoreConfigurationFile config = CoreLoadingUtils.getConfigurationFile(ConfigPath.ENVIRONMENT);
 		if(!config.exists())
 			throw new CommodoreCoreSetupException("Database setup config is missing!");
 
@@ -34,6 +43,7 @@ public class DatabaseImplementation implements CommodoreDatabase {
 			throw new CommodoreCoreSetupException("Given credentials are invalid or database is down.");
 	}
 	
+	@Override
 	public void shutdown() {
 		try {
 			if(!connection.isClosed())
@@ -42,6 +52,10 @@ public class DatabaseImplementation implements CommodoreDatabase {
 			ControlPanel.exceptionThrown(e);
 		}
 	}
+	
+	/* ------------------- */
+	/* Implementation part */
+	/* ------------------- */
 	
 	@Override
 	public Connection getConnection() {

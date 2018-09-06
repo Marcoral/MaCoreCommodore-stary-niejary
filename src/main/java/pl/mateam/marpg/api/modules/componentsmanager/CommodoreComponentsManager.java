@@ -1,7 +1,7 @@
 package pl.mateam.marpg.api.modules.componentsmanager;
 
 import pl.mateam.marpg.api.CommodoreComponent;
-import pl.mateam.marpg.api.CommodoreRuntimeException;
+import pl.mateam.marpg.api.superclasses.CommodoreRuntimeException;
 
 /*
  * Notice that ComponentsManager uses "CommodoreComponent" interface instead of "CommodoreModule" class.

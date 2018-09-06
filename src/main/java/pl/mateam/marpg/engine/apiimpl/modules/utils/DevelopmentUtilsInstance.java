@@ -10,7 +10,7 @@ import pl.mateam.marpg.engine.ControlPanel;
 
 public class DevelopmentUtilsInstance implements CommodoreDevelopmentUtils {
 	@Override
-	public <T> void injectExternalField(Class<T> clazz, T instance, String keyOfExternal, Object value) throws InjectExternalFieldException {
+	public <T> void injectExternalField(Class<? super T> clazz, T instance, String keyOfExternal, Object value, boolean fieldSurelyExists) throws InjectExternalFieldException {
 		Field[] fields = clazz.getDeclaredFields();
 		Field destination = null;
 		for(Field field : fields) {
@@ -23,7 +23,10 @@ public class DevelopmentUtilsInstance implements CommodoreDevelopmentUtils {
 			}
 		}
 		if(destination == null)
-			throw new InjectExternalFieldException("No external field with given key!", clazz, keyOfExternal, value);
+			if(!fieldSurelyExists)
+				return;
+			else
+				throw new InjectExternalFieldException("No external field with given key!", clazz, keyOfExternal, value);
 		destination.setAccessible(true);
 		
 		try {
