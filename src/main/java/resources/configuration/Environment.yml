@@ -1,4 +1,14 @@
-﻿Connection:
+﻿LoggingLevels:
+  #Levels:
+    #NONE = absolutely no info
+    #ERROR = print colorful message in addition to errors stacktrace
+    #WARNING = ERRORS + warnings info
+    #FULL = print complex info about setup (default both for setup and runtime)
+    #DEBUG = print too many info
+  LoggerSetup: FULL
+  LoggerRuntime: FULL
+
+Connection:
   IP: localhost
   Port: 3306
   Database: MaRPG

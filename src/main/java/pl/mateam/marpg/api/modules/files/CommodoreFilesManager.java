@@ -1,12 +1,12 @@
 package pl.mateam.marpg.api.modules.files;
 
 import pl.mateam.marpg.api.CommodoreComponent;
-import pl.mateam.marpg.api.modules.componentsmanager.CommodoreComponentsManager.ComponentNotLoadedYetException;
+import pl.mateam.marpg.api.modules.modulesmanager.CommodoreModulesManager.ModuleNotLoadedYetException;
 
 public interface CommodoreFilesManager {
-	void regenerateConfiguration(String componentName) throws ComponentNotLoadedYetException;
-	void overwriteConfiguration(String componentName) throws ComponentNotLoadedYetException;
-	CommodoreConfigurationFile getConfig(String componentName, String relativePath) throws ComponentNotLoadedYetException;
+	void regenerateConfiguration(String componentName) throws ModuleNotLoadedYetException;
+	void overwriteConfiguration(String componentName) throws ModuleNotLoadedYetException;
+	CommodoreConfigurationFile getConfig(String componentName, String relativePath) throws ModuleNotLoadedYetException;
 
 	void regenerateConfiguration(CommodoreComponent component);
 	void overwriteConfiguration(CommodoreComponent component);

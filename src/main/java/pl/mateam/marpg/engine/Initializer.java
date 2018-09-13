@@ -22,7 +22,7 @@ public class Initializer extends JavaPlugin {
 	}
 	
 	public void onDisable() {
-		Commodore.getComponentsManager().disableComponent(this.getName());	//Send shutdown signal to Core
+		Commodore.getModulesManager().disableModule(this.getName());	//Send shutdown signal to Core
 	}
 	
 	private void initializeAPI(CommodoreInstance commodoreBase) {
@@ -33,8 +33,8 @@ public class Initializer extends JavaPlugin {
 	
 	private void initializeCore(CommodoreInstance commodoreBase) {
 		Core core = new Core();
-		Commodore.getComponentsManager().enableComponent(core);
 		Commodore.getUtils().getDevelopmentUtils().injectExternalField(CommodoreInstance.class, commodoreBase, "core", core, true);
+		Commodore.getModulesManager().enableModule(core);
 		//Now use of core-dependent methods like Commodore.getDatabase() is save.
 	}
 }

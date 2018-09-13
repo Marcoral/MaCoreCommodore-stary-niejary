@@ -1,30 +1,31 @@
 package pl.mateam.marpg.engine.apiimpl;
 
 import pl.mateam.marpg.api.Commodore_Intermediate;
-import pl.mateam.marpg.api.modules.componentsmanager.CommodoreComponentsManager;
 import pl.mateam.marpg.api.modules.database.CommodoreDatabase;
 import pl.mateam.marpg.api.modules.files.CommodoreFilesManager;
+import pl.mateam.marpg.api.modules.loggers.CommodoreLoggersManager;
+import pl.mateam.marpg.api.modules.modulesmanager.CommodoreModulesManager;
 import pl.mateam.marpg.api.modules.utils.CommodoreDevelopmentUtils.Extern;
 import pl.mateam.marpg.api.superclasses.CommodoreRuntimeException;
 import pl.mateam.marpg.api.modules.utils.CommodoreUtils;
-import pl.mateam.marpg.engine.apiimpl.modules.componentsmanager.ComponentsManagerInstance;
-import pl.mateam.marpg.engine.apiimpl.modules.files.FilesManagerInstance;
-import pl.mateam.marpg.engine.apiimpl.modules.utils.UtilsInstance;
+import pl.mateam.marpg.engine.apiimpl.submodules.files.FilesManagerInstance;
+import pl.mateam.marpg.engine.apiimpl.submodules.modulesmanager.ComponentsManagerInstance;
+import pl.mateam.marpg.engine.apiimpl.submodules.utils.UtilsInstance;
 import pl.mateam.marpg.engine.core.Core;
 
 public class CommodoreInstance implements Commodore_Intermediate {
-	private CommodoreComponentsManager componentsManager = new ComponentsManagerInstance();
+	private CommodoreModulesManager modulesManager = new ComponentsManagerInstance();
 	private CommodoreFilesManager filesManager = new FilesManagerInstance();
 	private CommodoreUtils utils = new UtilsInstance();
 	
 	@Override
-	public CommodoreComponentsManager getComponentsManager() {
-		return componentsManager;
+	public CommodoreFilesManager getFilesManager() {
+		return filesManager;
 	}
 	
 	@Override
-	public CommodoreFilesManager getFilesManager() {
-		return filesManager;
+	public CommodoreModulesManager getModulesManager() {
+		return modulesManager;
 	}
 	
 	@Override
@@ -47,10 +48,20 @@ public class CommodoreInstance implements Commodore_Intermediate {
 		}
 	}
 	
-	@Override
-	public CommodoreDatabase getDatabase() {
+	private void validateCommodoreNotNull() {
 		if(core == null)
 			throw new CommodoreCoreNotInitializedException();
+	}
+	
+	@Override
+	public CommodoreDatabase getDatabase() {
+		validateCommodoreNotNull();
 		return core.getDatabase();
+	}
+	
+	@Override
+	public CommodoreLoggersManager getLoggersManager() {
+		validateCommodoreNotNull();
+		return core.getLoggersManager();
 	}
 }
