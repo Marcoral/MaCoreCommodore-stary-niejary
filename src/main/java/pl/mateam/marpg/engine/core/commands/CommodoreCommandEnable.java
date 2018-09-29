@@ -6,15 +6,15 @@ import java.util.Set;
 import org.bukkit.command.CommandSender;
 
 import pl.mateam.marpg.api.Commodore;
-import pl.mateam.marpg.api.modules.modulesmanager.CommodoreModulesManager.CommodoreMassiveEnablingResult;
-import pl.mateam.marpg.api.modules.utils.CommodoreMessengingUtils;
+import pl.mateam.marpg.api.submodules.modulesmanager.CommodoreModulesManager.CommodoreMassiveEnablingResult;
+import pl.mateam.marpg.api.submodules.utils.CommodoreUtilsMessenging;
 import pl.mateam.marpg.api.superclasses.CommodoreGenericCommand;
 import pl.mateam.marpg.engine.core.commands.shared.CoreCommandsUtils;
 
 public class CommodoreCommandEnable implements CommodoreGenericCommand {
 	@Override
 	public void invoked(CommandSender executor, String usedLabel, String... args) {
-		CommodoreMessengingUtils messenger = Commodore.getUtils().getMessengingUtils();
+		CommodoreUtilsMessenging messenger = Commodore.getUtils().getMessengingUtils();
 		if(args.length == 0) {
 			CommodoreMassiveEnablingResult result = Commodore.getModulesManager().enableAllModules();
 			List<String> enabledModules = result.getEnabledModulesNames();

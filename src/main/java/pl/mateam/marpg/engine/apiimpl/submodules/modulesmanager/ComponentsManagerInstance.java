@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 
 import pl.mateam.marpg.api.Commodore;
 import pl.mateam.marpg.api.CommodoreComponent;
-import pl.mateam.marpg.api.modules.modulesmanager.CommodoreModulesManager;
+import pl.mateam.marpg.api.submodules.modulesmanager.CommodoreModulesManager;
 import pl.mateam.marpg.api.superclasses.CommodoreModule;
 import pl.mateam.marpg.engine.Initializer;
 import pl.mateam.marpg.engine.apiimpl.ModuleDataInstance;

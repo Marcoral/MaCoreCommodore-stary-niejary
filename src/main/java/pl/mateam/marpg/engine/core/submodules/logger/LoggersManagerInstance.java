@@ -8,16 +8,16 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import pl.mateam.marpg.api.Commodore;
-import pl.mateam.marpg.api.modules.files.CommodoreConfigurationFile;
-import pl.mateam.marpg.api.modules.loggers.CommodoreLoggersManager;
-import pl.mateam.marpg.api.modules.utils.CommodoreMessengingUtils.Logger;
+import pl.mateam.marpg.api.submodules.files.CommodoreConfigurationFile;
+import pl.mateam.marpg.api.submodules.loggers.CommodoreLoggersManager;
+import pl.mateam.marpg.api.submodules.utils.CommodoreUtilsMessenging.Logger;
 import pl.mateam.marpg.api.superclasses.LogLevel;
-import pl.mateam.marpg.api.superclasses.ReloadableCommodoreSubmodule;
+import pl.mateam.marpg.api.superclasses.CommodoreReloadableSubmodule;
+import pl.mateam.marpg.engine.core.internal.ConfigPath;
+import pl.mateam.marpg.engine.core.internal.CoreUtils;
 import pl.mateam.marpg.engine.core.submodules.CommodoreCoreSetupException;
-import pl.mateam.marpg.engine.core.submodules.ConfigPath;
-import pl.mateam.marpg.engine.core.submodules.CoreLoadingUtils;
 
-public class LoggersManagerInstance implements CommodoreLoggersManager, ReloadableCommodoreSubmodule {
+public class LoggersManagerInstance implements CommodoreLoggersManager, CommodoreReloadableSubmodule {
 
 	/* ------------------- */
 	/* Core submodule part */
@@ -32,7 +32,7 @@ public class LoggersManagerInstance implements CommodoreLoggersManager, Reloadab
 
 	@Override
 	public void reload() {
-		CommodoreConfigurationFile config = CoreLoadingUtils.getConfigurationFile(ConfigPath.ENVIRONMENT);
+		CommodoreConfigurationFile config = CoreUtils.getConfigurationFile(ConfigPath.ENVIRONMENT);
 		if(!config.exists())
 			throw new CommodoreCoreSetupException("Logger setup config is missing!");
 				
@@ -41,7 +41,7 @@ public class LoggersManagerInstance implements CommodoreLoggersManager, Reloadab
 		for(Logger logger : Logger.values())
 			if(logger != Logger.LOGGER_SETUP)
 				setupLogger(configData, logger);
-		Commodore.getUtils().getMessengingUtils().logSuccessWithHighlight("", "Successfully set up loggers", "", Logger.LOGGER_SETUP, LogLevel.FULL);
+		Commodore.getUtils().getMessengingUtils().craftLogger(Logger.LOGGER_SETUP, LogLevel.FULL).colorSuccessHighlighted("Successfully set up loggers.").send();
 	}
 	
 	private void setupLogger(ConfigurationSection data, Logger logger) {

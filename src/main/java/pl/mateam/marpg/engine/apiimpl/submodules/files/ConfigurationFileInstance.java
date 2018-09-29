@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import pl.mateam.marpg.api.modules.files.CommodoreConfigurationFile;
+import pl.mateam.marpg.api.submodules.files.CommodoreConfigurationFile;
 import pl.mateam.marpg.engine.ControlPanel;
 
 public class ConfigurationFileInstance implements CommodoreConfigurationFile {

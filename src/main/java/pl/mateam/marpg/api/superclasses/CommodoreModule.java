@@ -7,29 +7,33 @@ import org.bukkit.plugin.java.JavaPlugin;
 import pl.mateam.marpg.api.Commodore;
 import pl.mateam.marpg.api.CommodoreComponent;
 import pl.mateam.marpg.api.CommodoreModuleData;
-import pl.mateam.marpg.api.modules.modulesmanager.CommodoreModulesManager.CommodoreModuleReloadResult;
-import pl.mateam.marpg.api.modules.utils.CommodoreDevelopmentUtils.Extern;
+import pl.mateam.marpg.api.submodules.modulesmanager.CommodoreModulesManager.CommodoreModuleReloadResult;
+import pl.mateam.marpg.api.submodules.text.CommodoreTextManager.NodeAlreadyExistsException;
+import pl.mateam.marpg.api.submodules.utils.CommodoreUtilsDevelopment.Extern;
 
 public abstract class CommodoreModule extends JavaPlugin implements CommodoreComponent {
-	
-	/* ------------------- *
-	 * Implementation part *
-	 * ------------------- */
-	
 	@Extern(key = "module data")
 	private CommodoreModuleData moduleData;
+
+	/* ---------- *
+	 * Submodules *
+	 * ---------- */
 
 	protected final void addSubmodule(CommodoreSubmodule submodule) {
 		moduleData.addSubmodule(submodule);
 	}
 	
-	protected final void addReloadableSubmodule(ReloadableCommodoreSubmodule submodule, String reloadKey) {
+	protected final void addReloadableSubmodule(CommodoreReloadableSubmodule submodule, String reloadKey) {
 		moduleData.addReloadableSubmodule(submodule, reloadKey);
 	}
 	
-	protected final void createReloadableGroup(String groupKey, ReloadableCommodoreSubmodule... submodules) {
+	protected final void createReloadableGroup(String groupKey, CommodoreReloadableSubmodule... submodules) {
 		moduleData.createReloadableGroup(groupKey, submodules);
 	}
+	
+	/* -------- *
+	 * Commands *
+	 * -------- */
 	
 	protected void registerGenericCommand(Supplier<? extends CommodoreGenericCommand> command, String name, String... aliases) {
 		moduleData.registerGenericCommand(command, name, aliases);
@@ -47,6 +51,25 @@ public abstract class CommodoreModule extends JavaPlugin implements CommodoreCom
 		moduleData.registerPlayerCommand(command, aliasesPriority, name, aliases);
 	}
 	
+	/* ---------- *
+	 * Database *
+	 * ---------- */
+	
+	protected void requestDatabaseTable(String tableName, String creationQuery) {
+		moduleData.requestDatabaseTable(tableName, creationQuery);
+	}
+	
+	/* ---- *
+	 * Text *
+	 * ---- */
+	
+	protected void registerTextNodes(String relativePathToFile) throws NodeAlreadyExistsException {
+		moduleData.registerTextNodes(relativePathToFile);
+	}
+	
+	/* -------- *
+	 * Handling *
+	 * -------- */
 	
 	@Override
 	public final JavaPlugin getPlugin() {

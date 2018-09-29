@@ -3,7 +3,7 @@ package pl.mateam.marpg.engine.core.commands;
 import org.bukkit.command.CommandSender;
 
 import pl.mateam.marpg.api.Commodore;
-import pl.mateam.marpg.api.modules.modulesmanager.CommodoreModulesManager.CommodoreFullReloadResult;
+import pl.mateam.marpg.api.submodules.modulesmanager.CommodoreModulesManager.CommodoreFullReloadResult;
 import pl.mateam.marpg.api.superclasses.CommodoreGenericCommand;
 import pl.mateam.marpg.engine.core.commands.shared.CoreCommandsUtils;
 

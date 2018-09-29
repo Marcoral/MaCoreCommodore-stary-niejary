@@ -1,5 +1,5 @@
 name: MaCoreCommodore
-version: 0.0.4
+version: 0.1.0
 main: pl.mateam.marpg.engine.Initializer
 
 author: Marcoral

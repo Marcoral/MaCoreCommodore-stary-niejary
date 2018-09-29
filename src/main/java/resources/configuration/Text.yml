@@ -1,0 +1,43 @@
+LOGIN_GAMEMASTER-IMPERSONATE: >
+  &c&lNiespodzianka!
+  &4To konto jest chronione magicznym zaklęciem mnichów z Tajemniczej Doliny.\n
+  &4Sam Poteflon powołał ich, aby strzegli tajemnic Mistrzów Gry przed śmiertelnymi.
+
+LOGIN_DATABASE-NOT-SETUP: >
+  &c&lWrzuć na luz!
+  &4Serwer jeszcze się nie podniósł.
+  &4Spróbuj zalogować się za 7 sekund.
+
+
+
+
+##############################
+##### FORMATTED MESSAGES #####
+##############################
+
+FORMAT_BANNED-MESSAGE-TEMPLATE: |
+  &4&lTwoje konto zostało zablokowane! :(
+  
+  
+  
+  &c&lPowód nałożenia blokady
+  &c{0}
+  
+  {1}
+  &c&lData nałożenia blokady
+  &c{2}
+  
+  {3}
+  
+FORMAT_BANNED-MESSAGE-WHOBANNED: |
+  &c&lBlokadę nałożył
+  &c{0}
+
+FORMAT_BANNED-MESSAGE-EXPIRES: |
+  &c&lData zdjęcia blokady
+  &c{0}
+  
+  
+  {1}
+
+FORMAT_BANNED-MESSAGE-BAR-PERCENTS: "&6[&e{0}%&6]"

@@ -11,9 +11,9 @@ import java.util.jar.JarFile;
 
 import pl.mateam.marpg.api.Commodore;
 import pl.mateam.marpg.api.CommodoreComponent;
-import pl.mateam.marpg.api.modules.files.CommodoreConfigurationFile;
-import pl.mateam.marpg.api.modules.files.CommodoreFilesManager;
-import pl.mateam.marpg.api.modules.modulesmanager.CommodoreModulesManager.ModuleNotLoadedYetException;
+import pl.mateam.marpg.api.submodules.files.CommodoreConfigurationFile;
+import pl.mateam.marpg.api.submodules.files.CommodoreFilesManager;
+import pl.mateam.marpg.api.submodules.modulesmanager.CommodoreModulesManager.ModuleNotLoadedYetException;
 import pl.mateam.marpg.engine.ControlPanel;
 import pl.mateam.marpg.engine.apiimpl.submodules.modulesmanager.ComponentsManagerInstance;
 

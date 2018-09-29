@@ -3,7 +3,7 @@ package pl.mateam.marpg.engine;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import pl.mateam.marpg.api.Commodore;
-import pl.mateam.marpg.api.modules.utils.CommodoreDevelopmentUtils;
+import pl.mateam.marpg.api.submodules.utils.CommodoreUtilsDevelopment;
 import pl.mateam.marpg.engine.apiimpl.CommodoreInstance;
 import pl.mateam.marpg.engine.core.Core;
 
@@ -26,7 +26,7 @@ public class Initializer extends JavaPlugin {
 	}
 	
 	private void initializeAPI(CommodoreInstance commodoreBase) {
-		CommodoreDevelopmentUtils devUtils = commodoreBase.getUtils().getDevelopmentUtils();
+		CommodoreUtilsDevelopment devUtils = commodoreBase.getUtils().getDevelopmentUtils();
 		devUtils.injectExternalField(Commodore.class, null, "instance", commodoreBase, true);
 		//Now use of core-independent methods like Commodore.getComponentsManager() is save.
 	}

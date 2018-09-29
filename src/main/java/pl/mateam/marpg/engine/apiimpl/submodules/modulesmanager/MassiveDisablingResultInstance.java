@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import pl.mateam.marpg.api.modules.modulesmanager.CommodoreModulesManager.CommodoreMassiveDisablingResult;
+import pl.mateam.marpg.api.submodules.modulesmanager.CommodoreModulesManager.CommodoreMassiveDisablingResult;
 
 public class MassiveDisablingResultInstance implements CommodoreMassiveDisablingResult {
 	private List<String> disabledComponents = new ArrayList<>();

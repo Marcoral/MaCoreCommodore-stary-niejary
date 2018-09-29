@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import pl.mateam.marpg.api.modules.modulesmanager.CommodoreModulesManager.CommodoreFullReloadResult;
+import pl.mateam.marpg.api.submodules.modulesmanager.CommodoreModulesManager.CommodoreFullReloadResult;
 
 public class FullReloadResultInstance implements CommodoreFullReloadResult {
 	private Map<String, Integer> reloadedSubmodulesCount = new HashMap<>();

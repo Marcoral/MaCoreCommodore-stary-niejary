@@ -1,0 +1,32 @@
+## Do NOT modify anything in this file,
+## unless you are certain of what you are doing!
+
+Users: >
+  CREATE TABLE `Users`(
+  `nickname` VARCHAR(36) PRIMARY KEY NOT NULL,
+  `password` VARCHAR(128) NOT NULL,
+  `last_seen` DATETIME NOT NULL,
+  INDEX `nicknameIndex` (`nickname`))
+
+Gamemasters: >
+  CREATE TABLE `Gamemasters`(
+  `nickname` VARCHAR(36) PRIMARY KEY NOT NULL,
+  `last_ip` VARCHAR(16) NOT NULL DEFAULT "0.0.0.0",
+  INDEX `nicknameIndex` (`nickname`))
+
+Players: >
+  CREATE TABLE `Players`(
+  `nickname` VARCHAR(36) PRIMARY KEY NOT NULL,
+  `is_woman` BIT NOT NULL DEFAULT 0,
+  INDEX `nicknameIndex` (`nickname`))
+
+Bans: >
+  CREATE TABLE `Bans`(
+  `nickname` VARCHAR(36) PRIMARY KEY NOT NULL,
+  `scope` ENUM('GLOBAL', 'CHAT_MAIN', 'CHAT_TRADE', 'CHAT_PRIVATE') NOT NULL,
+  `who_banned` VARCHAR(36),
+  `reason` TINYINT NOT NULL,
+  `custom_reason` VARCHAR(256),
+  `date` DATETIME NOT NULL,
+  `expires` DATETIME,
+  INDEX `nicknameIndex` (`nickname`))

@@ -1,5 +1,8 @@
 package pl.mateam.marpg.engine.apiimpl;
 
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -17,19 +20,25 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.command.defaults.BukkitCommand;
-import org.bukkit.craftbukkit.v1_12_R1.CraftServer;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.craftbukkit.v1_13_R2.CraftServer;
 import org.bukkit.entity.Player;
 
 import pl.mateam.marpg.api.Commodore;
 import pl.mateam.marpg.api.CommodoreModuleData;
-import pl.mateam.marpg.api.modules.modulesmanager.CommodoreModulesManager.CommodoreModuleReloadResult;
-import pl.mateam.marpg.api.modules.utils.CommodoreMessengingUtils.Logger;
+import pl.mateam.marpg.api.submodules.files.CommodoreConfigurationFile;
+import pl.mateam.marpg.api.submodules.modulesmanager.CommodoreModulesManager.CommodoreModuleReloadResult;
+import pl.mateam.marpg.api.submodules.text.CommodoreTextManager.NodeAlreadyExistsException;
+import pl.mateam.marpg.api.submodules.utils.CommodoreUtilsMessenging;
+import pl.mateam.marpg.api.submodules.utils.CommodoreUtilsMessenging.Logger;
 import pl.mateam.marpg.api.superclasses.CommodoreGenericCommand;
 import pl.mateam.marpg.api.superclasses.CommodorePlayerCommand;
 import pl.mateam.marpg.api.superclasses.CommodoreSubmodule;
 import pl.mateam.marpg.api.superclasses.LogLevel;
 import pl.mateam.marpg.api.superclasses.Priority;
-import pl.mateam.marpg.api.superclasses.ReloadableCommodoreSubmodule;
+import pl.mateam.marpg.api.superclasses.CommodoreReloadableSubmodule;
+import pl.mateam.marpg.engine.ControlPanel;
+import pl.mateam.marpg.engine.core.submodules.CommodoreCoreSetupException;
 
 public class ModuleDataInstance implements CommodoreModuleData {
 	
@@ -43,8 +52,8 @@ public class ModuleDataInstance implements CommodoreModuleData {
 	 * -------------------- */
 	
 	private List<CommodoreSubmodule> setupOrder = new ArrayList<>();
-	private Map<String, ReloadableCommodoreSubmodule> reloadableSubmodules = new HashMap<>();
-	private Map<String, ReloadableCommodoreSubmodule[]> reloadableGroups = new HashMap<>();
+	private Map<String, CommodoreReloadableSubmodule> reloadableSubmodules = new HashMap<>();
+	private Map<String, CommodoreReloadableSubmodule[]> reloadableGroups = new HashMap<>();
 
 	@Override
 	public void addSubmodule(CommodoreSubmodule submodule) {
@@ -52,13 +61,13 @@ public class ModuleDataInstance implements CommodoreModuleData {
 	}
 
 	@Override
-	public void addReloadableSubmodule(ReloadableCommodoreSubmodule submodule, String reloadKey) {
+	public void addReloadableSubmodule(CommodoreReloadableSubmodule submodule, String reloadKey) {
 		setupOrder.add(submodule);
 		reloadableSubmodules.put(reloadKey, submodule);
 	}
 
 	@Override
-	public void createReloadableGroup(String groupKey, ReloadableCommodoreSubmodule... submodules) {
+	public void createReloadableGroup(String groupKey, CommodoreReloadableSubmodule... submodules) {
 		reloadableGroups.put(groupKey, submodules);
 	}
 
@@ -124,16 +133,16 @@ public class ModuleDataInstance implements CommodoreModuleData {
 			if(oldCommandInfo != null) {
 				Priority priorityOfOldCommand = oldCommandInfo.priority;
 				if(aliasesPriority.getLevel() <= priorityOfOldCommand.getLevel()) {
-					Commodore.getUtils().getMessengingUtils().craftLogger(Logger.LOGGER_SETUP, LogLevel.DEBUG)
-					.colorCasual("Command ")
-					.colorCasualHighlighted(alias)
-					.colorCasual(" with priority ")
-					.colorCasualHighlighted(aliasesPriority.toString())
-					.colorCasual(" was not registered, as there already exists such command with priority ")
-					.colorCasualHighlighted(priorityOfOldCommand.toString())
-					.colorCasual(" (registerer: ")
-					.colorCasualHighlighted(oldCommandInfo.registerer.moduleName)
-					.colorCasual(")").send();
+					Commodore.getUtils().getMessengingUtils().craftLogger(Logger.LOGGER_SETUP, LogLevel.WARNING)
+					.colorError("Command ")
+					.colorErrorHighlighted(alias)
+					.colorError(" with priority ")
+					.colorErrorHighlighted(aliasesPriority.toString())
+					.colorError(" was not registered, as there already exists such command with priority ")
+					.colorErrorHighlighted(priorityOfOldCommand.toString())
+					.colorError(" (registerer: ")
+					.colorErrorHighlighted(oldCommandInfo.registerer.moduleName)
+					.colorError(")").send();
 					addCommandInfoToQueue(alias, newCommandInfo);
 					continue;
 				} else {
@@ -232,6 +241,49 @@ public class ModuleDataInstance implements CommodoreModuleData {
 			this.commandHandler = commandHandler;
 		}
 	}
+	
+	
+	/* ---------------- *
+	 * Database support *
+	 * ---------------- */
+	
+	@Override
+	public void requestDatabaseTable(String tableName, String creationQuery) {
+		Commodore.getDatabase().performAction(connection -> {
+			try {
+				DatabaseMetaData meta = connection.getMetaData();
+				try(ResultSet resultSet = meta.getTables(null, null, tableName, new String[] {"TABLE"})) {
+					if(!resultSet.next()) {
+						connection.createStatement().execute(creationQuery);
+						Commodore.getUtils().getMessengingUtils().logCasualWithHighlight("Database table ", tableName, " doesn't exist and will be created.", Logger.LOGGER_SETUP, LogLevel.FULL);
+					}
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		});
+	}
+	
+	/* ---------------- *
+	 * Text registering *
+	 * ---------------- */
+	
+	@Override
+	public void registerTextNodes(String relativePathToFile) throws NodeAlreadyExistsException {
+		CommodoreUtilsMessenging messenger = Commodore.getUtils().getMessengingUtils();
+		CommodoreConfigurationFile config = Commodore.getFilesManager().getConfig(moduleName, relativePathToFile);
+		if(!config.exists())
+			throw new CommodoreCoreSetupException("Text config at specified path is missing!");
+		
+		ConfigurationSection configData = config.getData();
+		for(String node : configData.getKeys(false)) {
+			String value = configData.getString(node);
+			Commodore.getTextManager().registerNode(node, value);
+		}
+		
+		messenger.craftLogger(Logger.LOGGER_SETUP, LogLevel.FULL)
+		.colorSuccessHighlighted("Text nodes have been set.").send();	
+	}
 			
 	/* -------------- *
 	 * State handling *
@@ -239,7 +291,12 @@ public class ModuleDataInstance implements CommodoreModuleData {
 	
 	@Override
 	public void initialize() {	//TODO: Return amount of initialized modules, track initialization time
-		setupOrder.forEach(CommodoreSubmodule::setup);
+		try {
+			setupOrder.forEach(CommodoreSubmodule::setup);
+		} catch(Exception e) {
+			Commodore.getLoggersManager().log("Error catched during module enabling!", Logger.LOGGER_SETUP, LogLevel.ERROR);
+			ControlPanel.exceptionThrown(e);
+		}
 	}
 
 	@Override
@@ -247,19 +304,19 @@ public class ModuleDataInstance implements CommodoreModuleData {
 		ModuleReloadResultInstance result = new ModuleReloadResultInstance();
 		//Reload all if no arguments given
 		if(arguments.length == 0) {
-			reloadableSubmodules.values().forEach(ReloadableCommodoreSubmodule::reload);
+			reloadableSubmodules.values().forEach(CommodoreReloadableSubmodule::reload);
 			result.reloadedSubmodulesCount = reloadableSubmodules.size();
 		} else {
 			Iterator<String> iterator = Arrays.asList(arguments).iterator();
-			Set<ReloadableCommodoreSubmodule> submodules = new LinkedHashSet<>();
+			Set<CommodoreReloadableSubmodule> submodules = new LinkedHashSet<>();
 			while(iterator.hasNext()) {
 				String key = iterator.next();
-				ReloadableCommodoreSubmodule[] assignedGroup = reloadableGroups.get(key);
+				CommodoreReloadableSubmodule[] assignedGroup = reloadableGroups.get(key);
 				if(assignedGroup != null)
-					for(ReloadableCommodoreSubmodule submodule : assignedGroup)
+					for(CommodoreReloadableSubmodule submodule : assignedGroup)
 						submodules.add(submodule);
 				else {
-					ReloadableCommodoreSubmodule submodule = reloadableSubmodules.get(key);
+					CommodoreReloadableSubmodule submodule = reloadableSubmodules.get(key);
 					if(submodule != null) 
 						submodules.add(submodule);
 					else
@@ -276,11 +333,16 @@ public class ModuleDataInstance implements CommodoreModuleData {
 
 	@Override
 	public void shutdown() {
-		//Shutdown submodules in order reverse to initialization
-		ListIterator<CommodoreSubmodule> submodulesIterator = setupOrder.listIterator(setupOrder.size());
-		while(submodulesIterator.hasPrevious())
-			submodulesIterator.previous().shutdown();
-		unregisterCommands();
+		try {
+			//Shutdown submodules in order reverse to initialization
+			ListIterator<CommodoreSubmodule> submodulesIterator = setupOrder.listIterator(setupOrder.size());
+			while(submodulesIterator.hasPrevious())
+				submodulesIterator.previous().shutdown();
+			unregisterCommands();
+		} catch(Exception e) {
+			Commodore.getLoggersManager().log("Error catched during module disabling!", Logger.LOGGER_SETUP, LogLevel.ERROR);
+			ControlPanel.exceptionThrown(e);
+		}
 	}
 	
 	

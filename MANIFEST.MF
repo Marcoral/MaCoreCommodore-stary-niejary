@@ -1,0 +1,2 @@
+Manifest-Version: 1.0
+Class-Path: ../lib/HikariCP-3.2.0.jar ../lib/slf4j-api-1.7.25.jar ../lib/log4j-over-slf4j-1.7.25.jar

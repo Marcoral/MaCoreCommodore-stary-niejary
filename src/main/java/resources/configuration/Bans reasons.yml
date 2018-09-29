@@ -1,0 +1,15 @@
+Global:
+  0: "Default global ban reason"
+  1: "Another global ban reason"
+
+ChatMain:
+  0: "Default main chat ban reason"
+  1: "Another main chat ban reason"
+
+ChatTrade:
+  0: "Default trade chat ban reason"
+  1: "Another trade chat ban reason"
+
+ChatPrivate:
+  0: "Default private chat ban reason"
+  1: "Another private chat ban reason"

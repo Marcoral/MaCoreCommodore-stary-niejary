@@ -8,12 +8,19 @@
   LoggerSetup: FULL
   LoggerRuntime: FULL
 
-Connection:
-  IP: localhost
-  Port: 3306
-  Database: MaRPG
-  Username: Marcoral
-  Password: obfuscated
+Database:
+  Connection:
+    IP: localhost
+    Database: MaRPG
+    Username: Marcoral
+    Password: obfuscated
+  
+  Setup:
+    MaximumPoolSize: 10
+    DataSourceProperties:
+      cachePrepStmts: true
+      prepStmtCacheSize: 250
+      prepStmtCacheSqlLimit: 2048
 
 Worlds:
   Defaults:

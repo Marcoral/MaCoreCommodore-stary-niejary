@@ -1,6 +1,7 @@
 DO soft reload if you want to:
   - Update worlds gamerules
   - Update logging levels
+  - Update messages from Text.yml
 
 
 DON'T DO reload if you want to:

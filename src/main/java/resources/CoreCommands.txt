@@ -1,7 +1,8 @@
 Basic commands:
 	"creload" AKA "crel": 				Use to reload modules. Invoking without arguments will cause reload of all enabled modules.
 	"creloadcore" AKA "crelcore": 		Reloads specified submodules of the Core.
-	"cenable: 							Use to enable modules. Invoking without arguments will cause enabling all modules.
+	"cenable": 							Use to enable modules. Invoking without arguments will cause enabling all modules.
 	"cdisable":							Use to disable modules. Invoking without arguments will cause disabling all modules except Core.
 	"cregenerate" AKA "cregen":			Use to regenerate files of given module. Available arguments: [-f | -fr]
-	"cregeneratecore" AKA "cregencore:	Use to overwrite files of Core. Available arguments: [-f | -fr]
+	"cregeneratecore" AKA "cregencore":	Use to overwrite files of Core. Available arguments: [-f | -fr]
+	"cban":								Use to ban players. Available arguments: [-s] [-r] [-t] [-b]

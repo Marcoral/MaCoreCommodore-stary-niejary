@@ -9,17 +9,17 @@ import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import pl.mateam.marpg.api.Commodore;
-import pl.mateam.marpg.api.modules.files.CommodoreConfigurationFile;
-import pl.mateam.marpg.api.modules.server.worlds.CommodoreWorld;
-import pl.mateam.marpg.api.modules.server.worlds.CommodoreWorldsManager;
-import pl.mateam.marpg.api.modules.utils.CommodoreMessengingUtils.Logger;
+import pl.mateam.marpg.api.submodules.files.CommodoreConfigurationFile;
+import pl.mateam.marpg.api.submodules.server.worlds.CommodoreWorld;
+import pl.mateam.marpg.api.submodules.server.worlds.CommodoreWorldsManager;
+import pl.mateam.marpg.api.submodules.utils.CommodoreUtilsMessenging.Logger;
 import pl.mateam.marpg.api.superclasses.LogLevel;
-import pl.mateam.marpg.api.superclasses.ReloadableCommodoreSubmodule;
+import pl.mateam.marpg.api.superclasses.CommodoreReloadableSubmodule;
+import pl.mateam.marpg.engine.core.internal.ConfigPath;
+import pl.mateam.marpg.engine.core.internal.CoreUtils;
 import pl.mateam.marpg.engine.core.submodules.CommodoreCoreSetupException;
-import pl.mateam.marpg.engine.core.submodules.ConfigPath;
-import pl.mateam.marpg.engine.core.submodules.CoreLoadingUtils;
 
-public class WorldsManagerImplementation implements CommodoreWorldsManager, ReloadableCommodoreSubmodule {
+public class WorldsManagerImplementation implements CommodoreWorldsManager, CommodoreReloadableSubmodule {
 	/* ------------------- */
 	/* Core submodule part */
 	/* ------------------- */
@@ -31,7 +31,7 @@ public class WorldsManagerImplementation implements CommodoreWorldsManager, Relo
 	
 	@Override
 	public void reload() {
-		CommodoreConfigurationFile config = CoreLoadingUtils.getConfigurationFile(ConfigPath.ENVIRONMENT);
+		CommodoreConfigurationFile config = CoreUtils.getConfigurationFile(ConfigPath.ENVIRONMENT);
 		if(!config.exists())
 			throw new CommodoreCoreSetupException("Worlds setup config is missing!");
 		
@@ -39,20 +39,20 @@ public class WorldsManagerImplementation implements CommodoreWorldsManager, Relo
 		YamlConfiguration configData = config.getData();
 		ConfigurationSection defaulsSection = configData.getConfigurationSection("Worlds.Defaults");
 		for(CommodoreWorld enumWorld : CommodoreWorld.values()) {
-			Commodore.getUtils().getMessengingUtils().logCasualWithHighlight("Preparing world \"", enumWorld.getDirectoryName(), "\"...", Logger.LOGGER_SETUP, LogLevel.DEBUG);
-			ConfigurationSection worldSection = configData.getConfigurationSection("Worlds.Specified." + enumWorld.getDirectoryName());
+			Commodore.getUtils().getMessengingUtils().logCasualWithHighlight("Preparing world \"", enumWorld.getConfigurationPath(), "\"...", Logger.LOGGER_SETUP, LogLevel.DEBUG);
+			ConfigurationSection worldSection = configData.getConfigurationSection("Worlds.Specified." + enumWorld.getConfigurationPath());
 			if(worldSection == null)
-				throw new CommodoreCoreSetupException("Configuration path not specified for world \"" + enumWorld.getDirectoryName() + "\"!");
+				throw new CommodoreCoreSetupException("Configuration path not specified for world \"" + enumWorld.getConfigurationPath() + "\"!");
 			String worldName = worldSection.getString("Name");
 			if(worldName == null)
-				throw new CommodoreCoreSetupException("World \"" + enumWorld.getDirectoryName() + "\": directory name not found!");
+				throw new CommodoreCoreSetupException("World \"" + enumWorld.getConfigurationPath() + "\": directory name not found!");
 			CommodoreWorld previousWorldWithSameDirectory = knownWorlds.get(worldName);
 			if(previousWorldWithSameDirectory != null)
-				throw new CommodoreCoreSetupException("World \"" + enumWorld.getDirectoryName() + "\": Minecraft world name is not unique! "
-						+ "It is already defined for world \"" + previousWorldWithSameDirectory.getDirectoryName() + "\".");
+				throw new CommodoreCoreSetupException("World \"" + enumWorld.getConfigurationPath() + "\": Minecraft world name is not unique! "
+						+ "It is already defined for world \"" + previousWorldWithSameDirectory.getConfigurationPath() + "\".");
 			World bukkitWorld = Bukkit.getServer().getWorld(worldName);
 			if(bukkitWorld == null)
-				throw new CommodoreCoreSetupException("World \"" + enumWorld.getDirectoryName() + "\": given Minecraft world name is invalid! "
+				throw new CommodoreCoreSetupException("World \"" + enumWorld.getConfigurationPath() + "\": given Minecraft world name is invalid! "
 						+ "There is no world with such name: \"" + worldName + "\"");
 			knownWorlds.put(worldName, enumWorld);
 			configure(bukkitWorld, defaulsSection);	//Performing default operations
@@ -61,6 +61,7 @@ public class WorldsManagerImplementation implements CommodoreWorldsManager, Relo
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	private void configure(World world, ConfigurationSection configurationPath) {
 		ConfigurationSection gamerulesPath = configurationPath.getConfigurationSection("Gamerules");
 		if(gamerulesPath != null) {

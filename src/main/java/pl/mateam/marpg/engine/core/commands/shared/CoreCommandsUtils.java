@@ -7,14 +7,14 @@ import java.util.Set;
 import org.bukkit.command.CommandSender;
 
 import pl.mateam.marpg.api.Commodore;
-import pl.mateam.marpg.api.modules.modulesmanager.CommodoreModulesManager;
-import pl.mateam.marpg.api.modules.modulesmanager.CommodoreModulesManager.CommodoreModuleReloadResult;
-import pl.mateam.marpg.api.modules.utils.CommodoreMessengingUtils;
+import pl.mateam.marpg.api.submodules.modulesmanager.CommodoreModulesManager;
+import pl.mateam.marpg.api.submodules.modulesmanager.CommodoreModulesManager.CommodoreModuleReloadResult;
+import pl.mateam.marpg.api.submodules.utils.CommodoreUtilsMessenging;
 
 public class CoreCommandsUtils {
 	public static void reloadComponent(CommandSender executor, String... arguments) {
 		CommodoreModulesManager manager = Commodore.getModulesManager();
-		CommodoreMessengingUtils messenger = Commodore.getUtils().getMessengingUtils();
+		CommodoreUtilsMessenging messenger = Commodore.getUtils().getMessengingUtils();
 		String module = arguments[0];
 		if(checkModuleUnknownAndHandle(module, executor))
 			return;

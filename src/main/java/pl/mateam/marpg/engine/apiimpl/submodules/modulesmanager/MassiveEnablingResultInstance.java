@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import pl.mateam.marpg.api.modules.modulesmanager.CommodoreModulesManager.CommodoreMassiveEnablingResult;
+import pl.mateam.marpg.api.submodules.modulesmanager.CommodoreModulesManager.CommodoreMassiveEnablingResult;
 
 public class MassiveEnablingResultInstance implements CommodoreMassiveEnablingResult {
 	private List<String> enabledComponents = new ArrayList<>();

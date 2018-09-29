@@ -1,27 +1,41 @@
 package pl.mateam.marpg.engine.apiimpl.submodules.utils;
 
-import pl.mateam.marpg.api.modules.utils.CommodoreDevelopmentUtils;
-import pl.mateam.marpg.api.modules.utils.CommodoreMessengingUtils;
-import pl.mateam.marpg.api.modules.utils.CommodoreReflectionUtils;
-import pl.mateam.marpg.api.modules.utils.CommodoreUtils;
+import pl.mateam.marpg.api.submodules.utils.CommodoreUtilsDevelopment;
+import pl.mateam.marpg.api.submodules.utils.CommodoreUtilsMessenging;
+import pl.mateam.marpg.api.submodules.utils.CommodoreUtilsParsing;
+import pl.mateam.marpg.api.submodules.utils.CommodoreUtilsCommands;
+import pl.mateam.marpg.api.submodules.utils.CommodoreUtilsReflection;
+import pl.mateam.marpg.api.submodules.utils.CommodoreUtils;
 
 public class UtilsInstance implements CommodoreUtils {
-	private CommodoreDevelopmentUtils developmentUtils = new DevelopmentUtilsInstance();
-	private CommodoreMessengingUtils messengingUtils = new MessengingUtilsInstance();
-	private CommodoreReflectionUtils reflectionUtils = new ReflectionUtilsInstance();
+	private CommodoreUtilsCommands commandsUtils = new UtilsCommandsInstance();
+	private CommodoreUtilsDevelopment developmentUtils = new UtilsDevelopmentInstance();
+	private CommodoreUtilsMessenging messengingUtils = new UtilsMessengingInstance();
+	private CommodoreUtilsParsing parsingUtils = new UtilsParsingInstance();
+	private CommodoreUtilsReflection reflectionUtils = new UtilsReflectionInstance();
 	
 	@Override
-	public CommodoreDevelopmentUtils getDevelopmentUtils() {
+	public CommodoreUtilsCommands getCommandsUtils() {
+		return commandsUtils;
+	}
+	
+	@Override
+	public CommodoreUtilsDevelopment getDevelopmentUtils() {
 		return developmentUtils;
 	}
 	
 	@Override
-	public CommodoreMessengingUtils getMessengingUtils() {
+	public CommodoreUtilsMessenging getMessengingUtils() {
 		return messengingUtils;
 	}
-
+	
 	@Override
-	public CommodoreReflectionUtils getReflectionUtils() {
+	public CommodoreUtilsParsing getParsingUtils() {
+		return parsingUtils;
+	}
+	
+	@Override
+	public CommodoreUtilsReflection getReflectionUtils() {
 		return reflectionUtils;
 	}
 }
